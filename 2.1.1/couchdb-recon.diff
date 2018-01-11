@@ -1,0 +1,39 @@
+diff --git a/rebar.config.script b/rebar.config.script
+index 60d2e31..6343d95 100644
+--- a/rebar.config.script
++++ b/rebar.config.script
+@@ -64,7 +64,8 @@ DepDescs = [
+ {ibrowse,          "ibrowse",          {tag, "CouchDB-4.0.1"}},
+ {jiffy,            "jiffy",            {tag, "CouchDB-0.14.11-2"}},
+ {mochiweb,         "mochiweb",         {tag, "CouchDB-2.12.0-1"}},
+-{meck,             "meck",             {tag, "0.8.8"}}
++{meck,             "meck",             {tag, "0.8.8"}},
++{recon,            {url, "https://github.com/ferd/recon"}, {tag, "2.3.4"}}
+
+ ],
+
+diff --git a/rel/reltool.config b/rel/reltool.config
+index 464f5f4..4197424 100644
+--- a/rel/reltool.config
++++ b/rel/reltool.config
+@@ -55,7 +55,8 @@
+         mochiweb,
+         rexi,
+         setup,
+-        snappy
++        snappy,
++        recon
+     ]},
+     {rel, "start_clean", "", [kernel, stdlib]},
+     {boot_rel, "couchdb"},
+@@ -108,7 +109,8 @@
+     {app, mochiweb, [{incl_cond, include}]},
+     {app, rexi, [{incl_cond, include}]},
+     {app, setup, [{incl_cond, include}]},
+-    {app, snappy, [{incl_cond, include}]}
++    {app, snappy, [{incl_cond, include}]},
++    {app, recon, [{incl_cond, include}]}
+ ]}.
+
+ {overlay_vars, "couchdb.config"}.
+

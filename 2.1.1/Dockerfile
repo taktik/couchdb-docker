@@ -86,12 +86,14 @@ ENV COUCHDB_VERSION 2.1.1
 RUN buildDeps=' \
     apt-transport-https \
     gcc \
+    git \
     g++ \
     erlang-dev \
     libcurl4-openssl-dev \
     libicu-dev \
     libmozjs185-dev \
     make \
+    patch \
   ' \
  && apt-get update -y -qq && apt-get install -y --no-install-recommends $buildDeps \
  # Acquire CouchDB source code
@@ -99,10 +101,17 @@ RUN buildDeps=' \
  && curl -fSL https://dist.apache.org/repos/dist/release/couchdb/source/$COUCHDB_VERSION/apache-couchdb-$COUCHDB_VERSION.tar.gz -o couchdb.tar.gz \
  && curl -fSL https://dist.apache.org/repos/dist/release/couchdb/source/$COUCHDB_VERSION/apache-couchdb-$COUCHDB_VERSION.tar.gz.asc -o couchdb.tar.gz.asc \
  && gpg --batch --verify couchdb.tar.gz.asc couchdb.tar.gz \
- && tar -xzf couchdb.tar.gz -C couchdb --strip-components=1 \
- && cd couchdb \
+ && tar -xzf couchdb.tar.gz -C couchdb --strip-components=1
+
+COPY ./couchdb-recon.diff /usr/src/couchdb
+
+RUN cd /usr/src/couchdb \
  # Build the release and install into /opt
+ && patch -p1 < couchdb-recon.diff \
  && ./configure --disable-docs \
+ && bin/rebar get-deps
+
+RUN cd /usr/src/couchdb \
  && make release \
  && mv /usr/src/couchdb/rel/couchdb /opt/ \
  # Cleanup build detritus
